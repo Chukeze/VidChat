@@ -9,9 +9,13 @@ let channel
 let queryString = window.location.search
 let urlParams = new URLSearchParams(queryString);
 let roomId = urlParams.get('room');
+const redirectToLobby = () =>{
+  window.location.href = '/lobby.html'
+}
 
 if(!roomId){
-  window.location = '/lobby.html'
+  window.location = 'lobby.html';
+  redirectToLobby()
 }
 
 let localStream
