@@ -1,21 +1,20 @@
-let APP_ID = process.env.APP_ID
-
+/*let APP_ID = process.env.APP_ID
 let token = process.env.TOKEN
+*/
+let APP_ID = '441c933e820742d6abc40acf59268a74'
+let token = '89dcfe9d06374f648808f092512ca959'
 let uid = String(Math.floor(Math.random() * 1000000000000000000000))
-
+console.log('AppId', APP_ID)
+console.log('Tokn', token)
 let client
 let channel
 
 let queryString = window.location.search
-let urlParams = new URLSearchParams(queryString);
-let roomId = urlParams.get('room');
-const redirectToLobby = () =>{
-  window.location.href = '/lobby.html'
-}
+let urlParams = new URLSearchParams(queryString)
+let roomId = urlParams.get('room')
 
-if(!roomId){
-  window.location = 'lobby.html';
-  redirectToLobby()
+if(!roomId) {
+  window.location.href = 'lobby.html'
 }
 
 let localStream
@@ -31,11 +30,11 @@ const servers = {
 }
 
 let constraints = {
-  video:{ 
-    width: {min:640, ideal:1920, max:1920},
-    height:{min:480, ideal:1080, max:1080},
+  video: {
+    width: { min: 640, ideal: 1920, max: 1920 },
+    height: { min: 480, ideal: 1080, max: 1080 },
   },
-  audio: true
+  audio: true,
 }
 
 const init = async () => {
@@ -61,18 +60,17 @@ const init = async () => {
 let handleMessageFromPeer = async (message, MemberId) => {
   message = JSON.parse(message.text)
 
-  if(message.type === 'offer'){
+  if (message.type === 'offer') {
     createAnswer(MemberId, message.offer)
   }
-  if( message.type === 'answer'){
-    addAnswer(message.answer);
+  if (message.type === 'answer') {
+    addAnswer(message.answer)
   }
-  if(message.type === 'candidate'){
-    if(peerConnection){
-        peerConnection.addIceCandidate(message.candidate)
+  if (message.type === 'candidate') {
+    if (peerConnection) {
+      peerConnection.addIceCandidate(message.candidate)
     }
   }
-
 }
 
 let handleUserJoined = async (MemberId) => {
@@ -80,8 +78,8 @@ let handleUserJoined = async (MemberId) => {
   createOffer(MemberId)
 }
 let handleUserLeft = (MemberId) => {
-  document.getElementById('user-2').style.display ='none';
-  document.getElementById('user-1').classList.remove('smallFrame');
+  document.getElementById('user-2').style.display = 'none'
+  document.getElementById('user-1').classList.remove('smallFrame')
 }
 
 const createPeerConnection = async (MemberId) => {
@@ -91,11 +89,11 @@ const createPeerConnection = async (MemberId) => {
   if ('srcObject' in document.getElementById('user-2')) {
     document.getElementById('user-2').srcObject = remoteStream
     document.getElementById('user-2').style.display = 'block'
-      document.getElementById('user-1').classList.add('smallFrame')
+    document.getElementById('user-1').classList.add('smallFrame')
   } else {
     document.getElementById('user-2').src = URL.createObjectURL(remoteStream)
     document.getElementById('user-2').style.display = 'block'
-      document.getElementById('user-1').classList.add('smallFrame')
+    document.getElementById('user-1').classList.add('smallFrame')
   }
 
   if (!localStream) {
@@ -124,7 +122,7 @@ const createPeerConnection = async (MemberId) => {
     if (e.candidate) {
       client.sendMessageToPeer(
         {
-          text: JSON.stringify({ 'type': 'candidate', 'candidate': e.candidate }),
+          text: JSON.stringify({ type: 'candidate', candidate: e.candidate }),
         },
         MemberId
       )
@@ -139,7 +137,7 @@ const createOffer = async (MemberId) => {
   await peerConnection.setLocalDescription(offer)
 
   client.sendMessageToPeer(
-    { text: JSON.stringify({ 'type': 'offer', 'offer': offer }) },
+    { text: JSON.stringify({ type: 'offer', offer: offer }) },
     MemberId
   )
 }
@@ -153,15 +151,15 @@ const createAnswer = async (MemberId) => {
   await peerConnection.setLocalDescription(answer)
 
   client.sendMessageToPeer(
-    { text: JSON.stringify({ 'type': 'answer', 'answer': answer }) },
+    { text: JSON.stringify({ type: 'answer', answer: answer }) },
     MemberId
   )
 }
 
 const addAnswer = async (answer) => {
-    if(!peerConnection.currentRemoteDescription) {
-        peerConnection.setRemoteDescription(answer)
-    }
+  if (!peerConnection.currentRemoteDescription) {
+    peerConnection.setRemoteDescription(answer)
+  }
 }
 
 let toggleCamera = async () => {
@@ -196,8 +194,8 @@ let toggleMic = async () => {
   }
 }
 
-const leaveChannel = async () =>{
-  await channel.leave();
+const leaveChannel = async () => {
+  await channel.leave()
   await client.logout()
 }
 
