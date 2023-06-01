@@ -110,7 +110,7 @@ const createPeerConnection = async (MemberId) => {
     }
   }
 
-  localStream.getTracks().foreach((track) => {
+  localStream.getTracks().forEach((track) => {
     peerConnection.addTrack(track, localStream)
   })
 
