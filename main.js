@@ -53,11 +53,13 @@ const init = async () => {
   client.on('MessageFromPeer', handleMessageFromPeer)
 
   localStream = await navigator.mediaDevices.getUserMedia(constraints)
+  document.getElementById('user-1').srcObject = localStream
+  /*
   if ('srcObject' in document.getElementById('user-1')) {
     document.getElementById('user-1').srcObject = localStream
   } else {
     document.getElementById('user-1').src = URL.createObjectURL(localStream)
-  }
+  }*/
 }
 let handleMessageFromPeer = async (message, MemberId) => {
   message = JSON.parse(message.text)
@@ -99,15 +101,14 @@ const createPeerConnection = async (MemberId) => {
   }
 
   if (!localStream) {
-    localStream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: false,
-    })
+    localStream = await navigator.mediaDevices.getUserMedia(constraints)
+     document.getElementById('user-1').srcObject = localStream
+     /*
     if ('srcObject' in document.getElementById('user-1')) {
       document.getElementById('user-1').srcObject = localStream
     } else {
       document.getElementById('user-1').src = URL.createObjectURL(localStream)
-    }
+    }*/
   }
 
   localStream.getTracks().forEach((track) => {
